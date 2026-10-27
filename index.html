@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rana’s Workout Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f1f8;--sf:#fff;--sf2:#efe8f5;--tx:#2b1838;--mu:#6f5d7e;--ac:#e8407a;--ac2:#4a1d5c;--ok:#11a384;--bd:#dccfe8;--on:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#190f22;--sf:#251633;--sf2:#321d44;--tx:#f4ecfa;--mu:#b9a6cb;--ac:#ff6a98;--ac2:#d7a8ff;--ok:#3dd9b4;--bd:#43285a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#190f22;--sf:#251633;--sf2:#321d44;--tx:#f4ecfa;--mu:#b9a6cb;--ac:#ff6a98;--ac2:#d7a8ff;--ok:#3dd9b4;--bd:#43285a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 'DM Sans',system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+h1{font:800 clamp(2rem,6vw,3.2rem)/1 'Bricolage Grotesque',sans-serif;margin:0;letter-spacing:-.02em;color:var(--ac2)}
+.tag{color:var(--mu);margin:6px 0 0}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+button,.btn{font:inherit;font-weight:700;border:1.5px solid var(--bd);background:var(--sf);color:var(--tx);padding:8px 14px;border-radius:999px;cursor:pointer}
+button:hover{border-color:var(--ac)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.pri{background:var(--ac);border-color:var(--ac);color:var(--on)}
+.edit-on{background:var(--ac2);border-color:var(--ac2);color:var(--sf)}
+nav{display:flex;gap:6px;overflow-x:auto;padding:4px 0 12px}
+nav button{white-space:nowrap;border-radius:14px;text-align:left;padding:10px 16px}
+nav button[aria-selected="true"]{background:var(--ac2);color:var(--sf);border-color:var(--ac2)}
+.dayhead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:8px 0 14px}
+.dayhead h2{font:800 1.7rem/1.1 'Bricolage Grotesque',sans-serif;margin:0}
+.dayhead p{margin:2px 0 0;color:var(--mu)}
+.bar{height:8px;background:var(--sf2);border-radius:99px;overflow:hidden;min-width:160px;flex:1;max-width:260px}
+.bar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.ex{background:var(--sf);border:1.5px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:12px;display:grid;grid-template-columns:auto 1fr;gap:6px 14px}
+.ex.done{border-color:var(--ok)}
+.ex.done .nm{text-decoration:line-through;opacity:.6}
+.chk{width:30px;height:30px;border-radius:50%;padding:0;display:grid;place-items:center;font-size:16px;line-height:1}
+.done .chk{background:var(--ok);border-color:var(--ok);color:#fff}
+.nm{font:700 1.2rem/1.25 'Bricolage Grotesque',sans-serif}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chip{background:var(--sf2);padding:2px 10px;border-radius:99px;font-size:.85rem;font-weight:500}
+.body{grid-column:2}
+.desc{margin:8px 0 0;color:var(--mu);white-space:pre-wrap}
+.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.links a{color:var(--ac);font-weight:700;text-decoration:none;border-bottom:2px solid currentColor}
+.fields{display:grid;gap:8px;margin-top:10px;grid-template-columns:repeat(3,1fr)}
+.fields .w{grid-column:1/-1}
+label{font-size:.8rem;color:var(--mu);font-weight:700;display:block}
+input,textarea{width:100%;font:inherit;color:var(--tx);background:var(--bg);border:1.5px solid var(--bd);border-radius:10px;padding:8px 10px}
+textarea{min-height:64px;resize:vertical}
+.acts{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.acts button{padding:4px 12px;font-size:.85rem}
+.del{color:#d12f4f}
+.add{width:100%;border-style:dashed;padding:14px;border-radius:18px;color:var(--ac2)}
+.notes{margin-top:34px;background:var(--ac2);color:var(--sf);border-radius:22px;padding:20px 22px}
+.notes h3{font:800 1.4rem 'Bricolage Grotesque',sans-serif;margin:0 0 10px}
+.notes ul{margin:0;padding-left:20px}.notes li{margin:5px 0}
+.notes input{background:rgba(255,255,255,.12);color:inherit;border-color:rgba(255,255,255,.35);margin:4px 0}
+.notes .btn2{background:transparent;color:inherit;border-color:rgba(255,255,255,.5);padding:4px 12px;font-size:.85rem;margin-top:6px}
+.empty{padding:28px;text-align:center;color:var(--mu);border:1.5px dashed var(--bd);border-radius:18px}
+.ro .editonly,.rw .viewonly{display:none}
+@media (max-width:560px){.fields{grid-template-columns:1fr 1fr}.ex{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const KEY='rana-planner-v1';
+const L=(n,sets='3',reps='10–12',rest='1–2 min',desc='')=>({id:Math.random().toString(36).slice(2,9),name:n,sets,reps,rest,desc,link:'',link2:'',done:false});
+const DEF={
+ days:[
+  {id:'d1',title:'Day 1',sub:'Lower · Quads & Glutes',ex:[L('Cable Glute Kickback'),L('Leg Press'),L('Leg Extension'),L('Bulgarian Split Squat or Lunges','3','8–10 each leg'),L('Seated Calf Raises','3','12–15')]},
+  {id:'d2',title:'Day 2',sub:'Upper Body',ex:[L('Chest Press Machine'),L('Lat Pulldown'),L('Seated Cable Row'),L('Triceps Rope Pushdown'),L('Biceps Curl'),L('Lateral Raises or Shoulder Press Machine','3','10–12','1–2 min','Alternate between the two each time.')]},
+  {id:'d3',title:'Day 3',sub:'Lower · Hamstrings & Glutes',ex:[L('Leg Curl'),L('Romanian Deadlift'),L('Squat'),L('Hip Thrust'),L('Standing Calf Raises','3','12–15')]}],
+ notes:['2 to 3 sets for each exercise','Rest 1 to 2 minutes between sets','Drink water!','Use progressive overload for the best results','Try to do some cardio after your workout','If Upper Day takes too long, reduce the sets or move one muscle group to a Leg Day (for example a shoulder exercise, or biceps curls / triceps pushdowns).']
+};
+let S,cur=0,edit=false;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.days)S=JSON.parse(JSON.stringify(DEF));
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const url=u=>{u=(u||'').trim();if(!u)return'';return/^https?:\/\//i.test(u)?u:'https://'+u};
+const yt=n=>'https://www.youtube.com/results?search_query='+encodeURIComponent(n+' women exercise form');
+function render(){
+ if(cur>=S.days.length)cur=Math.max(0,S.days.length-1);
+ const d=S.days[cur];
+ const nav=S.days.map((x,i)=>`<button role="tab" aria-selected="${i===cur}" data-a="tab" data-i="${i}">${esc(x.title)}<br><small>${esc(x.sub)}</small></button>`).join('')+`<button data-a="addday" class="editonly">+ Day</button>`;
+ let h=`<header><div><h1>Rana’s Workout Planner</h1><p class="tag">Three days a week. Tick each exercise as you finish it.</p></div>
+ <div class="tools">${''/* EDIT BUTTON (hidden). To bring it back, delete this comment wrapper and keep only the button: <button data-a="edit" class="${edit?'edit-on':''}">${edit?'Done editing':'Edit plan'}</button> */}<button data-a="theme">Light / Dark</button><button data-a="export" class="editonly">Export</button><button data-a="import" class="editonly">Import</button><button data-a="reset" class="editonly del">Reset</button></div></header>
+ <nav role="tablist">${nav}</nav>`;
+ if(!d){h+=`<div class="empty">No days yet. Edit the plan and add a day.</div>`}
+ else{
+  const dn=d.ex.filter(e=>e.done).length,pc=d.ex.length?Math.round(dn/d.ex.length*100):0;
+  h+=`<div class="dayhead"><div>${edit?`<input data-f="title" value="${esc(d.title)}" aria-label="Day title"><input data-f="sub" value="${esc(d.sub)}" aria-label="Day subtitle" style="margin-top:6px">`:`<h2>${esc(d.title)}: ${esc(d.sub)}</h2><p>${dn} of ${d.ex.length} done</p>`}</div><div class="bar" aria-label="Progress"><i style="width:${pc}%"></i></div></div>`;
+  if(!d.ex.length)h+=`<div class="empty">No exercises on this day yet.</div>`;
+  d.ex.forEach((e,i)=>{
+   const links=[e.link&&`<a href="${esc(url(e.link))}" target="_blank" rel="noopener">▶ Video / link</a>`,e.link2&&`<a href="${esc(url(e.link2))}" target="_blank" rel="noopener">Extra link</a>`,`<a href="${yt(e.name)}" target="_blank" rel="noopener">Find demo on YouTube</a>`].filter(Boolean).join('');
+   h+=`<article class="ex ${e.done?'done':''}" data-i="${i}"><button class="chk" data-a="done" aria-label="Mark done">${e.done?'✓':''}</button>
+   <div><div class="nm">${esc(e.name)}</div><div class="chips viewonly">${e.sets?`<span class="chip">${esc(e.sets)} sets</span>`:''}${e.reps?`<span class="chip">${esc(e.reps)} reps</span>`:''}${e.rest?`<span class="chip">Rest ${esc(e.rest)}</span>`:''}</div></div>
+   <div class="body">${e.desc?`<p class="desc viewonly">${esc(e.desc)}</p>`:''}<div class="links viewonly">${links}</div>
+   <div class="editonly"><div class="fields"><div class="w"><label>Exercise name</label><input data-f="name" value="${esc(e.name)}"></div>
+   <div><label>Sets</label><input data-f="sets" value="${esc(e.sets)}"></div><div><label>Reps</label><input data-f="reps" value="${esc(e.reps)}"></div><div><label>Rest</label><input data-f="rest" value="${esc(e.rest)}"></div>
+   <div class="w"><label>Description / tips</label><textarea data-f="desc">${esc(e.desc)}</textarea></div>
+   <div class="w"><label>Video or page link</label><input data-f="link" value="${esc(e.link)}" placeholder="https://youtube.com/..."></div>
+   <div class="w"><label>Second link (optional)</label><input data-f="link2" value="${esc(e.link2)}" placeholder="https://..."></div></div>
+   <div class="acts"><button data-a="up">↑ Up</button><button data-a="down">↓ Down</button><button data-a="rm" class="del">Delete</button></div></div></div></article>`});
+  h+=`<button class="add editonly" data-a="addex">+ Add exercise</button>`;
+  if(edit)h+=`<div class="acts"><button data-a="rmday" class="del">Delete this day</button></div>`;
+ }
+ h+=`<section class="notes"><h3>Notes</h3><ul>${S.notes.map((n,i)=>edit?`<li style="list-style:none;margin-left:-20px"><input data-n="${i}" value="${esc(n)}"><button class="btn2" data-a="rmnote" data-i="${i}">Remove</button></li>`:`<li>${esc(n)}</li>`).join('')}</ul>${edit?`<button class="btn2" data-a="addnote">+ Add note</button>`:''}</section>`;
+ const a=document.getElementById('app');a.className='wrap '+(edit?'rw':'ro');a.innerHTML=h;
+}
+document.addEventListener('input',e=>{
+ const t=e.target,d=S.days[cur];
+ if(t.dataset.n!==undefined){S.notes[+t.dataset.n]=t.value;save();return}
+ if(!t.dataset.f||!d)return;
+ const x=t.closest('.ex');
+ if(x){d.ex[+x.dataset.i][t.dataset.f]=t.value;x.querySelector('.nm').textContent=d.ex[+x.dataset.i].name}else{d[t.dataset.f]=t.value;const b=document.querySelector('nav [aria-selected="true"]');if(b)b.firstChild.textContent=d.title;}
+ save();
+});
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-a]');if(!b)return;
+ const a=b.dataset.a,d=S.days[cur],x=b.closest('.ex'),i=x?+x.dataset.i:+b.dataset.i;
+ if(a==='tab')cur=i;
+ else if(a==='edit')edit=!edit;
+ else if(a==='theme'){const r=document.documentElement,dk=matchMedia('(prefers-color-scheme:dark)').matches;const now=r.dataset.theme||(dk?'dark':'light');r.dataset.theme=now==='dark'?'light':'dark';return}
+ else if(a==='done')d.ex[i].done=!d.ex[i].done;
+ else if(a==='addex')d.ex.push(L('New exercise'));
+ else if(a==='rm'){if(confirm('Delete this exercise?'))d.ex.splice(i,1);else return}
+ else if(a==='up'&&i>0)[d.ex[i-1],d.ex[i]]=[d.ex[i],d.ex[i-1]];
+ else if(a==='down'&&i<d.ex.length-1)[d.ex[i+1],d.ex[i]]=[d.ex[i],d.ex[i+1]];
+ else if(a==='addday'){S.days.push({id:'d'+Date.now(),title:'Day '+(S.days.length+1),sub:'New day',ex:[]});cur=S.days.length-1}
+ else if(a==='rmday'){if(confirm('Delete this whole day?')){S.days.splice(cur,1)}else return}
+ else if(a==='addnote')S.notes.push('New note');
+ else if(a==='rmnote')S.notes.splice(i,1);
+ else if(a==='reset'){if(confirm('Reset everything to the original plan?'))S=JSON.parse(JSON.stringify(DEF));else return}
+ else if(a==='export'){const t=JSON.stringify(S);navigator.clipboard?.writeText(t).then(()=>alert('Plan copied. Paste it somewhere safe as a backup.'),()=>prompt('Copy your plan:',t));return}
+ else if(a==='import'){const t=prompt('Paste a previously exported plan:');if(!t)return;try{const o=JSON.parse(t);if(!o.days)throw 0;S=o;cur=0}catch(err){alert('That text is not a valid plan.');return}}
+ save();render();
+});
+render();
+</script>
+</body>
+</html>
